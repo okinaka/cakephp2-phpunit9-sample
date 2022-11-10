@@ -5,5 +5,8 @@
         "php": ">=7.3",
         "cakephp/cakephp": "2.10.*"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "config": {
+        "vendor-dir": "app/Vendor"
+    }
 }
