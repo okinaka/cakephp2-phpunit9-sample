@@ -9,5 +9,8 @@
     "config": {
         "vendor-dir": "app/Vendor",
         "sort-packages": true
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     }
 }
