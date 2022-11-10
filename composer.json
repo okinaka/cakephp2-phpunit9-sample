@@ -7,6 +7,7 @@
     },
     "license": "MIT",
     "config": {
-        "vendor-dir": "app/Vendor"
+        "vendor-dir": "app/Vendor",
+        "sort-packages": true
     }
 }
