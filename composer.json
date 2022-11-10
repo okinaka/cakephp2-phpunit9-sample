@@ -1,0 +1,9 @@
+{
+    "name": "okinaka/cakephp2-phpunit9-sample",
+    "description": "CakePHP Application sample with PHPUnit 9.x",
+    "require": {
+        "php": ">=7.3",
+        "cakephp/cakephp": "2.10.*"
+    },
+    "license": "MIT"
+}
