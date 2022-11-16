@@ -19,7 +19,7 @@
  */
 App::uses('CakePlugin', 'Core');
 App::uses('Controller', 'Controller');
-App::uses('CakeHtmlReporter', 'TestSuite/Reporter');
+App::uses('CakeTestCase', 'TestSuite');
 App::uses('Model', 'Model');
 
 /**
@@ -60,6 +60,7 @@ class ConstructorPost extends Model {
  * CakeTestCaseTest
  *
  * @package       Cake.Test.Case.TestSuite
+ * @covers CakeTestCase
  */
 class CakeTestCaseTest extends CakeTestCase {
 
@@ -75,19 +76,9 @@ class CakeTestCaseTest extends CakeTestCase {
  *
  * @return void
  */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		require_once CAKE . 'Test' . DS . 'Fixture' . DS . 'AssertTagsTestCase.php';
 		require_once CAKE . 'Test' . DS . 'Fixture' . DS . 'FixturizedTestCase.php';
-	}
-
-/**
- * setUp
- *
- * @return void
- */
-	public function setUp() {
-		parent::setUp();
-		$this->Reporter = $this->getMock('CakeHtmlReporter');
 	}
 
 /**
@@ -95,10 +86,9 @@ class CakeTestCaseTest extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Result);
-		unset($this->Reporter);
 	}
 
 /**
@@ -392,8 +382,8 @@ class CakeTestCaseTest extends CakeTestCase {
  */
 	public function testAssertTextContains() {
 		$stringDirty = "some\nstring\r\nwith\rdifferent\nline endings!";
-		$this->assertContains("different", $stringDirty);
-		$this->assertNotContains("different\rline", $stringDirty);
+		$this->assertStringContainsString("different", $stringDirty);
+		$this->assertStringNotContainsString("different\rline", $stringDirty);
 		$this->assertTextContains("different\rline", $stringDirty);
 	}
 
@@ -428,7 +418,7 @@ class CakeTestCaseTest extends CakeTestCase {
 		$Post = $this->getMockForModel('Post', array('save'));
 
 		$this->assertNull($Post->save(array()));
-		$this->assertInternalType('array', $Post->find('all'));
+		$this->assertIsArray($Post->find('all'));
 	}
 
 /**
@@ -438,7 +428,7 @@ class CakeTestCaseTest extends CakeTestCase {
  */
 	public function testGetMockForModelSecondaryDatasource() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+			'Plugin' => array(CAKE . 'Test' . 'test_app' . DS . 'Plugin' . DS),
 			'Model/Datasource/Database' => array(
 				CAKE . 'Test' . DS . 'test_app' . DS . 'Model' . DS . 'Datasource' . DS . 'Database' . DS
 			)
@@ -485,12 +475,9 @@ class CakeTestCaseTest extends CakeTestCase {
 		$TestPluginComment = $this->getMockForModel('TestPlugin.TestPluginComment', array('save'));
 
 		$this->assertInstanceOf('TestPluginComment', $TestPluginComment);
-		$TestPluginComment->expects($this->at(0))
+		$TestPluginComment->expects($this->exactly(2))
 			->method('save')
-			->will($this->returnValue(true));
-		$TestPluginComment->expects($this->at(1))
-			->method('save')
-			->will($this->returnValue(false));
+			->willReturnOnConsecutiveCalls(true, false);
 		$this->assertTrue($TestPluginComment->save(array()));
 		$this->assertFalse($TestPluginComment->save(array()));
 	}
@@ -506,12 +493,9 @@ class CakeTestCaseTest extends CakeTestCase {
 		$result = ClassRegistry::init('Comment');
 		$this->assertInstanceOf('Model', $result);
 
-		$Mock->expects($this->at(0))
+		$Mock->expects($this->exactly(2))
 			->method('save')
-			->will($this->returnValue(true));
-		$Mock->expects($this->at(1))
-			->method('save')
-			->will($this->returnValue(false));
+			->willReturnOnConsecutiveCalls(true, false);
 
 		$this->assertTrue($Mock->save(array()));
 		$this->assertFalse($Mock->save(array()));
@@ -520,11 +504,11 @@ class CakeTestCaseTest extends CakeTestCase {
 /**
  * testGetMockForModelDoesNotExist
  *
- * @expectedException MissingModelException
- * @expectedExceptionMessage Model IDoNotExist could not be found
  * @return void
  */
 	public function testGetMockForModelDoesNotExist() {
+		$this->expectException('MissingModelException');
+		$this->expectExceptionMessage('Model IDoNotExist could not be found');
 		$this->getMockForModel('IDoNotExist');
 	}
 }
