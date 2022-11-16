@@ -24,7 +24,7 @@ App::uses('CakeTestFixture', 'TestSuite/Fixture');
  *
  * @package       Cake.TestSuite
  */
-abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
+abstract class CakeTestCase extends PHPUnit\Framework\TestCase {
 
 /**
  * The class responsible for managing the creation, loading and removing of fixtures
@@ -71,11 +71,11 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * If no TestResult object is passed a new one will be created.
  * This method is run for each test method in this class
  *
- * @param PHPUnit_Framework_TestResult $result The test result object
- * @return PHPUnit_Framework_TestResult
+ * @param PHPUnit/Framework/TestResult $result The test result object
+ * @return PHPUnit/Framework/TestResult
  * @throws InvalidArgumentException
  */
-	public function run(PHPUnit_Framework_TestResult $result = null) {
+	public function run(?PHPUnit\Framework\TestResult $result = null): PHPUnit\Framework\TestResult  {
 		$level = ob_get_level();
 
 		if (!empty($this->fixtureManager)) {
@@ -133,7 +133,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		if (empty($this->_configure)) {
@@ -152,7 +152,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		App::build($this->_pathRestore, App::RESET);
 		if (class_exists('ClassRegistry', false)) {
@@ -185,7 +185,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  */
-	protected function assertPreConditions() {
+	protected function assertPreConditions(): void {
 		parent::assertPreConditions();
 		$this->startTest($this->getName());
 	}
@@ -195,7 +195,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  */
-	protected function assertPostConditions() {
+	protected function assertPostConditions(): void {
 		parent::assertPostConditions();
 		$this->endTest($this->getName());
 	}
@@ -324,7 +324,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 	public function assertTextContains($needle, $haystack, $message = '', $ignoreCase = false) {
 		$needle = str_replace(array("\r\n", "\r"), "\n", $needle);
 		$haystack = str_replace(array("\r\n", "\r"), "\n", $haystack);
-		return $this->assertContains($needle, $haystack, $message, $ignoreCase);
+		return $this->assertStringContainsString($needle, $haystack, $message, $ignoreCase);
 	}
 
 /**
@@ -340,7 +340,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 	public function assertTextNotContains($needle, $haystack, $message = '', $ignoreCase = false) {
 		$needle = str_replace(array("\r\n", "\r"), "\n", $needle);
 		$haystack = str_replace(array("\r\n", "\r"), "\n", $haystack);
-		return $this->assertNotContains($needle, $haystack, $message, $ignoreCase);
+		return $this->assertStringNotContainsString($needle, $haystack, $message, $ignoreCase);
 	}
 
 /**
@@ -557,7 +557,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertEqual($result, $expected, $message = '') {
-		return static::assertEquals($expected, $result, $message);
+		static::assertEquals($expected, $result, $message);
 	}
 
 /**
@@ -570,7 +570,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertNotEqual($result, $expected, $message = '') {
-		return static::assertNotEquals($expected, $result, $message);
+		static::assertNotEquals($expected, $result, $message);
 	}
 
 /**
@@ -583,7 +583,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertPattern($pattern, $string, $message = '') {
-		return static::assertRegExp($pattern, $string, $message);
+		static::assertRegExp($pattern, $string, $message);
 	}
 
 /**
@@ -596,7 +596,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertIdentical($actual, $expected, $message = '') {
-		return static::assertSame($expected, $actual, $message);
+		static::assertSame($expected, $actual, $message);
 	}
 
 /**
@@ -609,7 +609,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertNotIdentical($actual, $expected, $message = '') {
-		return static::assertNotSame($expected, $actual, $message);
+		static::assertNotSame($expected, $actual, $message);
 	}
 
 /**
@@ -622,7 +622,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @return void
  */
 	protected static function assertNoPattern($pattern, $string, $message = '') {
-		return static::assertNotRegExp($pattern, $string, $message);
+		static::assertNotRegExp($pattern, $string, $message);
 	}
 
 /**
@@ -642,7 +642,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @deprecated 3.0.0 This is a compatibility wrapper for 1.x. It will be removed in 3.0
  * @return void
  */
-	protected function expectError($expected = false, $message = '') {
+	public function expectError($expected = false, $message = ''): void {
 		if (!$expected) {
 			$expected = 'Exception';
 		}
@@ -657,8 +657,8 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @deprecated 3.0.0 This is a compatibility wrapper for 1.x. It will be removed in 3.0.
  * @return void
  */
-	public function expectException($name = 'Exception', $message = '') {
-		$this->setExpectedException($name, $message);
+	public function expectException($name = 'Exception', $message = ''): void {
+		parent::expectException($name);
 	}
 
 /**
@@ -670,8 +670,8 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @deprecated 3.0.0 This is a compatibility wrapper for 1.x. It will be removed in 3.0
  * @return void
  */
-	protected static function assertReference(&$first, &$second, $message = '') {
-		return static::assertSame($first, $second, $message);
+	protected static function assertReference(&$first, &$second, $message = ''): void {
+		static::assertSame($first, $second, $message);
 	}
 
 /**
@@ -683,8 +683,8 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @deprecated 3.0.0 This is a compatibility wrapper for 1.x. It will be removed in 3.0
  * @return void
  */
-	protected static function assertIsA($object, $type, $message = '') {
-		return static::assertInstanceOf($type, $object, $message);
+	protected static function assertIsA($object, $type, $message = ''): void {
+		static::assertInstanceOf($type, $object, $message);
 	}
 
 /**
@@ -696,10 +696,10 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @param string $message the text to display if the assertion is not correct
  * @return void
  */
-	protected static function assertWithinMargin($result, $expected, $margin, $message = '') {
+	protected static function assertWithinMargin($result, $expected, $margin, $message = ''): void {
 		$upper = $result + $margin;
 		$lower = $result - $margin;
-		return static::assertTrue((($expected <= $upper) && ($expected >= $lower)), $message);
+		static::assertTrue((($expected <= $upper) && ($expected >= $lower)), $message);
 	}
 
 /**
@@ -816,12 +816,6 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 		$callOriginalMethods = false,
 		$proxyTarget = null
 	) {
-		$phpUnitVersion = PHPUnit_Runner_Version::id();
-		if (version_compare($phpUnitVersion, '5.7.0', '<')) {
-			return parent::getMock($originalClassName, $methods, $arguments,
-					$mockClassName, $callOriginalConstructor, $callOriginalClone,
-					$callAutoload, $cloneArguments, $callOriginalMethods, $proxyTarget);
-		}
 		if ($cloneArguments) {
 			throw new InvalidArgumentException('$cloneArguments parameter is not supported');
 		}
