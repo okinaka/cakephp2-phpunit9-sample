@@ -76,6 +76,8 @@ abstract class CakeTestCase extends PHPUnit\Framework\TestCase {
  * @throws InvalidArgumentException
  */
 	public function run(?PHPUnit\Framework\TestResult $result = null): PHPUnit\Framework\TestResult  {
+		$this->setUpFixtureManagerForPhpunitCommand();
+
 		$level = ob_get_level();
 
 		if (!empty($this->fixtureManager)) {
@@ -93,6 +95,19 @@ abstract class CakeTestCase extends PHPUnit\Framework\TestCase {
 
 		return $result;
 	}
+
+/**
+ * When executed from the phpunit command, since FixtureManager is not prepared, it can be prepared with TestCase::run()
+ */
+	private function setUpFixtureManagerForPhpunitCommand() {
+		if (is_null($this->fixtureManager)) {
+			App::uses('CakeFixtureManager', 'TestSuite/Fixture');
+
+			$this->fixtureManager = new CakeFixtureManager();
+			$this->fixtureManager->fixturize($this);
+		}
+	}
+
 
 /**
  * Called when a test case method is about to start (to be overridden when needed.)
