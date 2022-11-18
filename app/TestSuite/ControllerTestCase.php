@@ -16,8 +16,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('Dispatcher', 'Routing');
 App::uses('CakeTestCase', 'TestSuite');
+App::uses('CakeTestSuiteDispatcher', 'TestSuite');
+App::uses('Dispatcher', 'Routing');
 App::uses('Router', 'Routing');
 App::uses('CakeRequest', 'Network');
 App::uses('CakeResponse', 'Network');
@@ -432,7 +433,7 @@ abstract class ControllerTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset(
 			$this->contents,
